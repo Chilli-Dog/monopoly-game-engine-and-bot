@@ -74,10 +74,16 @@ impl ChanceCards {
     }
 }
 
+#[derive(PartialEq, Eq, Hash, Clone, Debug)]
+pub enum ColourGroup {
+    Brown, LightBlue, Pink, Orange, Red, Yellow, Green, DarkBlue
+}
+
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub struct Property {
     name: String,
     base_price: u32,
+    group: ColourGroup,
     // this stores the prices of rent in ascending order from 1 house, 2 houses
     // ... to one hotel etc.
     rent_prices: [u32; 6],
@@ -90,31 +96,55 @@ pub struct Property {
 impl Property {
     pub fn init() -> Vec<Self> {
         let title_deeds: Vec<Property> = vec![
-            Property { name: "old kent road".to_string(), base_price: 60, rent_prices: [2, 10, 30, 90, 160, 250], price_of_extras: 50, mortgage_potential: 30 },
-            Property { name: "whitechapel road".to_string(), base_price: 60, rent_prices: [4, 20, 60, 180, 320, 450], price_of_extras: 50, mortgage_potential: 30 },
-            Property { name: "the angel islington".to_string(), base_price: 100, rent_prices: [6, 30, 90, 270, 400, 550], price_of_extras: 50, mortgage_potential: 50 },
-            Property { name: "euston road".to_string(), base_price: 100, rent_prices: [6, 30, 90, 270, 400, 550], price_of_extras: 50, mortgage_potential: 50 },
-            Property { name: "pentonville road".to_string(), base_price: 120, rent_prices: [8, 40, 100, 300, 450, 600], price_of_extras: 50, mortgage_potential: 60 },
-            Property { name: "pall mall".to_string(), base_price: 140, rent_prices: [10, 50, 150, 450, 625, 750], price_of_extras: 100, mortgage_potential: 70 },
-            Property { name: "northumberland avenue".to_string(), base_price: 140, rent_prices: [12, 60, 180, 500, 700, 900], price_of_extras: 100, mortgage_potential: 80 },
-            Property { name: "whitehall".to_string(), base_price: 160, rent_prices: [10, 50, 150, 450, 625, 750], price_of_extras: 100, mortgage_potential: 70 },
-            Property { name: "vine street".to_string(), base_price: 180, rent_prices: [16, 80, 220, 600, 800, 1000], price_of_extras: 100, mortgage_potential: 100 },
-            Property { name: "marlborough street".to_string(), base_price: 180, rent_prices: [14, 70, 200, 550, 750, 950], price_of_extras: 100, mortgage_potential: 90 },
-            Property { name: "bow street".to_string(), base_price: 200, rent_prices: [14, 70, 200, 550, 750, 950], price_of_extras: 100, mortgage_potential: 90 },
-            Property { name: "fleet street".to_string(), base_price: 220, rent_prices: [18, 90, 250, 700, 875, 1050], price_of_extras: 150, mortgage_potential: 110 },
-            Property { name: "strand".to_string(), base_price: 220, rent_prices: [18, 90, 250, 700, 875, 1050], price_of_extras: 150, mortgage_potential: 110 },
-            Property { name: "trafalgar square".to_string(), base_price: 240, rent_prices: [20, 100, 300, 750, 925, 1100], price_of_extras: 150, mortgage_potential: 120 },
-            Property { name: "picadilly".to_string(), base_price: 260, rent_prices: [24, 120, 360, 850, 1025, 1200], price_of_extras: 150, mortgage_potential: 140 },
-            Property { name: "coventry street".to_string(), base_price: 260, rent_prices: [22, 110, 330, 800, 975, 1150], price_of_extras: 150, mortgage_potential: 130 },
-            Property { name: "leicester square".to_string(), base_price: 280, rent_prices: [22, 110, 330, 800, 975, 1150], price_of_extras: 150, mortgage_potential: 130 },
-            Property { name: "oxford street".to_string(), base_price: 300, rent_prices: [26, 130, 390, 900, 110, 1275], price_of_extras: 200, mortgage_potential: 150 },
-            Property { name: "bond street".to_string(), base_price: 300, rent_prices: [28, 150, 450, 1000, 1200, 1400], price_of_extras: 200, mortgage_potential: 160 },
-            Property { name: "regent street".to_string(), base_price: 320, rent_prices: [26, 130, 390, 900, 110, 1275], price_of_extras: 200, mortgage_potential: 150 },
-            Property { name: "park lane".to_string(), base_price: 350, rent_prices: [35, 175, 500, 110, 1300, 1500], price_of_extras: 200, mortgage_potential: 175 },
-            Property { name: "mayfair".to_string(), base_price: 400, rent_prices: [50, 200, 600, 1400, 1700, 2000], price_of_extras: 200, mortgage_potential: 200 },
+            Property { name: "old kent road".to_string(), base_price: 60, group: ColourGroup::Brown, rent_prices: [2, 10, 30, 90, 160, 250], price_of_extras: 50, mortgage_potential: 30 },
+            Property { name: "whitechapel road".to_string(), base_price: 60, group: ColourGroup::Brown, rent_prices: [4, 20, 60, 180, 320, 450], price_of_extras: 50, mortgage_potential: 30 },
+            Property { name: "the angel islington".to_string(), base_price: 100, group: ColourGroup::LightBlue, rent_prices: [6, 30, 90, 270, 400, 550], price_of_extras: 50, mortgage_potential: 50 },
+            Property { name: "euston road".to_string(), base_price: 100, group: ColourGroup::LightBlue, rent_prices: [6, 30, 90, 270, 400, 550], price_of_extras: 50, mortgage_potential: 50 },
+            Property { name: "pentonville road".to_string(), base_price: 120, group: ColourGroup::LightBlue, rent_prices: [8, 40, 100, 300, 450, 600], price_of_extras: 50, mortgage_potential: 60 },
+            Property { name: "pall mall".to_string(), base_price: 140, group: ColourGroup::Pink, rent_prices: [10, 50, 150, 450, 625, 750], price_of_extras: 100, mortgage_potential: 70 },
+            Property { name: "northumberland avenue".to_string(), base_price: 140, group: ColourGroup::Pink, rent_prices: [12, 60, 180, 500, 700, 900], price_of_extras: 100, mortgage_potential: 80 },
+            Property { name: "whitehall".to_string(), base_price: 160, group: ColourGroup::Pink, rent_prices: [10, 50, 150, 450, 625, 750], price_of_extras: 100, mortgage_potential: 70 },
+            Property { name: "vine street".to_string(), base_price: 180, group: ColourGroup::Orange, rent_prices: [16, 80, 220, 600, 800, 1000], price_of_extras: 100, mortgage_potential: 100 },
+            Property { name: "marlborough street".to_string(), base_price: 180, group: ColourGroup::Orange, rent_prices: [14, 70, 200, 550, 750, 950], price_of_extras: 100, mortgage_potential: 90 },
+            Property { name: "bow street".to_string(), base_price: 200, group: ColourGroup::Orange, rent_prices: [14, 70, 200, 550, 750, 950], price_of_extras: 100, mortgage_potential: 90 },
+            Property { name: "fleet street".to_string(), base_price: 220, group: ColourGroup::Red, rent_prices: [18, 90, 250, 700, 875, 1050], price_of_extras: 150, mortgage_potential: 110 },
+            Property { name: "strand".to_string(), base_price: 220, group: ColourGroup::Red, rent_prices: [18, 90, 250, 700, 875, 1050], price_of_extras: 150, mortgage_potential: 110 },
+            Property { name: "trafalgar square".to_string(), base_price: 240, group: ColourGroup::Red, rent_prices: [20, 100, 300, 750, 925, 1100], price_of_extras: 150, mortgage_potential: 120 },
+            Property { name: "picadilly".to_string(), base_price: 260, group: ColourGroup::Yellow, rent_prices: [24, 120, 360, 850, 1025, 1200], price_of_extras: 150, mortgage_potential: 140 },
+            Property { name: "coventry street".to_string(), base_price: 260, group: ColourGroup::Yellow, rent_prices: [22, 110, 330, 800, 975, 1150], price_of_extras: 150, mortgage_potential: 130 },
+            Property { name: "leicester square".to_string(), base_price: 280, group: ColourGroup::Yellow, rent_prices: [22, 110, 330, 800, 975, 1150], price_of_extras: 150, mortgage_potential: 130 },
+            Property { name: "oxford street".to_string(), base_price: 300, group: ColourGroup::Green, rent_prices: [26, 130, 390, 900, 110, 1275], price_of_extras: 200, mortgage_potential: 150 },
+            Property { name: "bond street".to_string(), base_price: 300, group: ColourGroup::Green, rent_prices: [28, 150, 450, 1000, 1200, 1400], price_of_extras: 200, mortgage_potential: 160 },
+            Property { name: "regent street".to_string(), base_price: 320, group: ColourGroup::Green, rent_prices: [26, 130, 390, 900, 110, 1275], price_of_extras: 200, mortgage_potential: 150 },
+            Property { name: "park lane".to_string(), base_price: 350, group: ColourGroup::DarkBlue, rent_prices: [35, 175, 500, 110, 1300, 1500], price_of_extras: 200, mortgage_potential: 175 },
+            Property { name: "mayfair".to_string(), base_price: 400, group: ColourGroup::DarkBlue, rent_prices: [50, 200, 600, 1400, 1700, 2000], price_of_extras: 200, mortgage_potential: 200 },
         ];
-        
+
         title_deeds
+    }
+    pub fn owned(&self, game: &Game) -> (Option<Player>, bool, i32) {
+        let players = game.players.clone();
+        let mut already_owned: bool = false;
+        for player in players {
+            already_owned = player.properties.contains_key(self);
+            let num_of_houses = player.properties.get(self).unwrap().0;
+            let num_of_hotels = player.properties.get(self).unwrap().1;
+            let mut total_rent: i32;
+            if num_of_hotels == 1 {
+                total_rent = self.rent_prices[5] as i32;
+            }
+            else {
+                total_rent = self.rent_prices[num_of_houses as usize] as i32;
+            }
+            
+            if already_owned {
+                return (Some(player), true, total_rent)
+            }
+            else {
+                continue;
+            }
+        }
+        (None, false, 0)
     }
 }
 
@@ -131,10 +161,10 @@ impl RailRoad {
         let base_price = 200;
         let mortgage_potential = 100;
         vec![
-             RailRoad { name: "kings cross station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
-             RailRoad { name: "marylebone station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
-             RailRoad { name: "liverpool street station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
-             RailRoad { name: "fenchurch street station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
+            RailRoad { name: "kings cross station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
+            RailRoad { name: "marylebone station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
+            RailRoad { name: "liverpool street station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
+            RailRoad { name: "fenchurch street station".to_string(), base_price, rent: [25, 50, 100, 200], mortgage_potential, },
         ]
     }
 }
@@ -161,8 +191,9 @@ pub struct Player {
     another_roll: (bool, i32),
     // value of it, number of them
     money: Vec<(i32, i32)>,
-    // the i32 value is the number of houses on the property
-    properties: HashMap<Property, i32>,
+    // the first i32 value is the number of houses on the property
+    // the second i32 value is the number of hotels on the property
+    properties: HashMap<Property, (i32, i32)>,
     // if both i32 values are 1 then the rent is *10 of the dice etc.
     // format: (electrical, water)
     utilities: (i32, i32),
@@ -182,7 +213,7 @@ impl Player {
         money.push((10, 2));
         money.push((5, 1));
         money.push((1, 5));
-        let mut properties = HashMap::new();
+        let mut properties: HashMap<Property, (i32, i32)> = HashMap::new();
         let mut utilities = (0, 0);
         let mut railroads = Vec::with_capacity(4);
         let mut railroads_owned = 0;
@@ -212,8 +243,13 @@ impl Player {
         }
 
         let board_size: i32 = 40;
+        let old_pos = self.current_pos;
         // this formula allows for the wrapping around of the board such as mayfair + 5 or old kent road - 3
-        let new_pos = ((self.current_pos as i32 + x) % board_size + board_size) % board_size;
+        let new_pos = ((old_pos as i32 + x) % board_size + board_size) % board_size;
+        // passed go
+        if new_pos < old_pos as i32 {
+            self.return_change(200);
+        }
 
         self.current_pos = new_pos as usize;
     }
@@ -234,7 +270,13 @@ impl Player {
             false
         }
     }
-    pub fn general_pay(&mut self, mut price: i32) {
+    pub fn general_pay(
+        &mut self,
+        mut price: i32,
+        recipient: Option<&mut Player>,
+        bank_recipient: Option<&mut Bank>
+    ) {
+        let original_price = price; // Store the total to give to the recipient later
         let denominations = [500, 100, 50, 20, 10, 5, 1];
 
         for i in 0..denominations.len() {
@@ -247,11 +289,8 @@ impl Player {
         if price > 0 {
             for i in (0..denominations.len()).rev() {
                 if self.money[i].1 > 0 && denominations[i] > price {
-                    // Spend this bill
                     self.money[i].1 -= 1;
                     let change = denominations[i] - price;
-
-                    // Add change back to the player's wallet
                     self.return_change(change);
                     price = 0;
                     break;
@@ -260,7 +299,18 @@ impl Player {
         }
 
         if price > 0 {
-            panic!("Player cannot afford this even though check_balance passed!\nThis error is in the implementation of 'Player' -> 'general_pay()'");
+            panic!("Player cannot afford this even though check_balance passed!");
+        }
+
+        // give money to the recipients
+        if let Some(other_player) = recipient {
+            other_player.return_change(original_price);
+            println!("Paid player {}!", original_price);
+        }
+        else if let Some(bank) = bank_recipient {
+            // Update the bank's specific bill counts
+            bank.receive_funds(original_price);
+            println!("Paid bank {}!", original_price);
         }
     }
     pub fn return_change(&mut self, mut amount: i32) {
@@ -271,7 +321,7 @@ impl Player {
             amount %= denominations[i];
         }
     }
-    pub fn buy_square(&mut self, square: &[Square]) {
+    pub fn buy_square(&mut self, square: &[Square], bank: &mut Bank) {
         let total_money = self.check_balance();
         let current_square = &square[self.current_pos];
 
@@ -281,15 +331,15 @@ impl Player {
                 if self.compare_price(prop.base_price as i32) {
                     println!("Buying street: {}", prop.name);
                     let price = prop.base_price as i32;
-                    self.general_pay(price);
-                    self.properties.insert(prop.clone(), 0);
+                    self.general_pay(price, None, Some(bank));
+                    self.properties.insert(prop.clone(), (0, 0));
                 }
             }
             Square::Railroad(rr) => {
                 if self.compare_price(rr.base_price as i32) {
                     println!("Buying railroad: {}", rr.name);
                     let price = rr.base_price as i32;
-                    self.general_pay(price);
+                    self.general_pay(price, None, Some(bank));
                     self.railroads.push(rr.clone());
                     self.railroads_owned += 1;
                 }
@@ -297,7 +347,7 @@ impl Player {
             Square::Utility { name, cost } => {
                 if self.compare_price(*cost as i32) {
                     println!("Buying utility: {}", name);
-                    self.general_pay(*cost as i32);
+                    self.general_pay(*cost as i32, None, Some(bank));
                     if name == "electrical company" {
                         self.utilities.0 = 1;
                     }
@@ -348,6 +398,64 @@ impl Player {
             println!("The error has occurred in the implementation of 'Player' -> mortgage_utility()");
         }
     }
+    pub fn buy_houses(&mut self, property_name: &str, mut num_to_add: i32, bank: &mut Bank) {
+        let property = self.properties.keys().find(|p| p.name == property_name).cloned();
+
+        if let Some(prop) = property {
+            let current_houses = self.properties.get(&prop).unwrap().0;
+
+            if bank.houses < num_to_add as u32 {
+                println!("Bank only has {} houses left.", bank.houses);
+                return;
+            }
+            if current_houses < 4 {
+                let total_cost = (prop.price_of_extras as i32) * num_to_add;
+                if self.compare_price(total_cost) {
+                    self.general_pay(total_cost, None, Some(bank));
+                    if let Some(count) = self.properties.get_mut(&prop) {
+                        count.0 += num_to_add;
+                    }
+
+                    bank.houses -= num_to_add as u32;
+                    println!("Successfully built {} houses on {}", num_to_add, prop.name);
+                }
+                else {
+                    println!("Insufficient money to build {} houses", num_to_add);
+                }
+            }
+            else {
+                let total_cost = prop.price_of_extras as i32;
+                if self.compare_price(total_cost) {
+                    self.general_pay(total_cost, None, Some(bank));
+                    if let Some(count) = self.properties.get_mut(&prop) {
+                        count.1 += 1;
+                        count.0 -= 4;
+                    }
+
+                    bank.hotels -= 1 as u32;
+                    bank.houses += 4 as u32;
+                    println!("Successfully built {} hotels on {}", 1, prop.name);
+                    num_to_add -= 1;
+                    if num_to_add > 0 {
+                        self.buy_houses(property_name, num_to_add, bank);
+                    }
+                    else {
+                        println!("Finished the transaction!");
+                    }
+                }
+                else {
+                    println!("Insufficient money to build {} houses", num_to_add);
+                }
+            }
+        }
+        else {
+            println!("You do not own this property");
+        }
+    }
+    pub fn go_to_jail(&mut self) {
+        self.current_pos = 10;
+
+    }
 }
 
 pub struct Bank {
@@ -368,7 +476,7 @@ impl Bank {
     pub fn new() -> Self {
         let title_deeds = Property::init();
         let railroads = RailRoad::init();
-        
+
         Self {
             five_hundreds: 30,
             one_hundreds: 30,
@@ -382,6 +490,25 @@ impl Bank {
             houses: 32,
             hotels: 12
         }
+    }
+
+    pub fn receive_funds(&mut self, mut amount: i32) {
+        let denominations = [500, 100, 50, 20, 10, 5, 1];
+
+        // This distributes the incoming total into the bank's bill slots
+        self.five_hundreds += amount / 500;
+        amount %= 500;
+        self.one_hundreds += amount / 100;
+        amount %= 100;
+        self.fifties += amount / 50;
+        amount %= 50;
+        self.twenties += amount / 20;
+        amount %= 20;
+        self.tens += amount / 10;
+        amount %= 10;
+        self.fives += amount / 5;
+        amount %= 5;
+        self.ones += amount;
     }
 }
 
@@ -492,7 +619,7 @@ impl Game {
             board_sequence,
             bank,
         };
-        
+
         new_game
     }
 
@@ -503,23 +630,49 @@ impl Game {
            3 = resolution
            4 = jail
         */
-        let mut current_player = self.players[current_player_idx].clone();
+        let mut curr_player = self.players[current_player_idx].clone();
 
-        let (dice1, dice2) = Player::roll();
-        if dice1 == dice2 {
-            if current_player.another_roll.1 <= 1 {
+        // roll the dice
+        let (die1, die2) = Player::roll();
+        let total_roll = die1 + die2;
 
+        // check if a double
+        if die1 == die2 {
+            curr_player.another_roll = (true, curr_player.another_roll.1 + 1);
+        }
+
+        curr_player.move_x_spaces(total_roll as i32);
+    }
+    pub fn handle_landing(&self, square: &Square, mut curr_player: Player) {
+        // Street(crate::game_basics::Property),
+        // Railroad(crate::game_basics::RailRoad),
+        // Utility { name: String, cost: u32 },
+
+        // Tax { name: String, amount: i32 },
+        // CommunityChest,
+        // Chance,
+        // Go,
+        // Jail,
+        // FreeParking,
+        // GoToJail,
+        match square {
+            Square::Street(prop) => {
+                let (owning_player_option, owned, price) = prop.owned(self);
+                let mut owning_player = owning_player_option.unwrap();
+                if owned {
+                    curr_player.general_pay(price, Some(&mut owning_player), None)
+                }
+                else {
+                    // allow the bot to buy the property or do other general actions
+                }
             }
-            else {
-                println!("Speeding fine for rolling 3 doubles!");
-                current_player.in_jail = true;
-                current_player.current_pos = 10;
+            Square::Railroad(rr) => {
+                // make this be able to buy, pay rent, and do the basic actions
+            }
+
+            _ => {
+
             }
         }
-        let total_die = dice1 + dice2;
-
-        current_player.move_x_spaces(total_die as i32);
     }
 }
-
-// create the game logic for the agents to manipulate here:
